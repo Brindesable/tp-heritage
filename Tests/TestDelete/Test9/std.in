@@ -1,0 +1,4 @@
+C circle1 0 0 10
+C circle2 0 0 5
+C circle3 0 0 3
+DELETE circle1 circle2 circle3

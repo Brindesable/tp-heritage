@@ -1,0 +1,1 @@
+Vérifie que lancer une énumeration alors qu'aucun n'objet n'a été créé aboutit à une erreur.

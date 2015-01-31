@@ -1,0 +1,5 @@
+C circle1 0 0 10
+DELETE circle1
+UNDO
+REDO
+LIST

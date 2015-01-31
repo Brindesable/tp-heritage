@@ -220,6 +220,8 @@ Code Figure::Move (string name, vector<long> dXY, bool enableHistory, int & nbOb
             nbObjectsMoved = ii->second.GetNbShapesInside();
 
             commands.push_back(lineCommand);
+			//suppression des redo eventuels
+			redo.clear();
         }
         else
         {   return INEXISTING_OBJECT;
@@ -233,18 +235,23 @@ void Figure::List ()
 // Algorithme :
 //
 {   map<string,Shape*>::iterator it;
-
-	for(it=shapes.begin(); it!=shapes.end(); ++it)
-	{   cout<<it->second->Command()<<endl;
+		
+	if(shapes.size() > 0)
+	{	for(it=shapes.begin(); it!=shapes.end(); ++it)
+		{   cout<<it->second->Command()<<endl;
+		}
+	}
+	else
+	{	cout << "#anything created yet\r\n";
 	}
 
-    cout << "[Debug] history : " << endl;
+    /*cout << "[Debug] history : " << endl;
 	for(unsigned int i = 0; i < commands.size(); i++)
     {   for(unsigned int j = 0; j < commands.at(i).size(); j++)
         {   cout  << commands.at(i).at(j) << " ";
         }
         cout << endl;
-    }
+    }*/
 } //----- Fin de Méthode
 
 void Figure::Save (string nomFichier)
@@ -325,8 +332,9 @@ Code Figure::Delete (vector<string> & name, bool enableHistory, int & nbObjectsD
         delete (*is);
     }
     if(enableHistory)
-    {
-		commands.push_back(lineCommand);
+    {	commands.push_back(lineCommand);
+		//suppression des redo eventuels
+		redo.clear();
 	}
 
     return OK;
@@ -348,8 +356,10 @@ void Figure::Clear (bool enableHistory)
 	shapes.clear();
 	selections.clear();
 
-	if(enableHistory){
-		commands.push_back(lineCommand);
+	if(enableHistory)
+	{	commands.push_back(lineCommand);
+		//suppression des redo eventuels
+		redo.clear();
 	}
 } //----- Fin de Méthode
 
@@ -382,12 +392,14 @@ vector<string> Figure::Redo ()
 	}
 } //----- Fin de Méthode
 
-void Figure::SetHistory (vector<string> history)
+void Figure::AddToHistory (vector<string> history)
 // Algorithme :
 //
-{
-	commands.push_back(history);
+{	commands.push_back(history);
+	//suppression des redo eventuels
+	redo.clear();
 } //----- Fin de Méthode
+
 
 //-------------------------------------------- Constructeurs - destructeur
 Figure::Figure ( const Figure & unFigure )
@@ -461,4 +473,6 @@ void  Figure::history(string action, string objects)
 	lineHistory.push_back(objects);
 
     commands.push_back(lineHistory);
+	//suppression des redo eventuels
+	redo.clear();
 }

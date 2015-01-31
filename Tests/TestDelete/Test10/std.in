@@ -1,0 +1,3 @@
+C circle 0 0 10
+S selection -20 -20 20 20
+DELETE selection

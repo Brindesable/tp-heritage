@@ -30,11 +30,8 @@ using namespace std;
 //----------------------------------------------------- Méthodes publiques
 void Application::Launch()
 {
-    string line;
-    for(;;)
-    {
-        getline(cin, line);
-        interpret(line, true, true);
+    for (std::string line; std::getline(std::cin, line);) {
+       interpret(line, true, true);
     }
 }
 
@@ -330,60 +327,72 @@ void Application::interpret(string cmdString, bool enableHistory, bool verbose)
     {
 		vector<string>undo=figure.Undo();
 		vector<string> :: iterator it;
-
-		if(undo.front()=="MOVE")
-        {   urMove=true;
-			for(it=undo.begin()+1; it!=undo.end(); ++it)
-			{
-				interpret(*it, false, false);
+		
+		if(undo.size() > 0)
+		{
+			if(undo.front()=="MOVE")
+		    {   urMove=true;
+				for(it=undo.begin()+1; it!=undo.end(); ++it)
+				{
+					interpret(*it, false, false);
+				}
+				urMove=false;
+		        cout << "OK\r\n#" << undo.size() - 1 << " object(s) moved\r\n";
 			}
-			urMove=false;
-            cout << "OK\r\n#" << undo.size() - 1 << " objects moved\r\n";
+			if(undo.front()=="DELETE"){
+				for(it=undo.begin()+1; it!=undo.end(); ++it)
+				{
+					interpret(*it, false, false);
+				}
+				cout << "OK\r\n#" << undo.size() - 1 << " object(s) created\r\n";
+			}
+			if(undo.front()=="INSERT"){
+				urDelete=true;
+				for(it=undo.begin()+1; it!=undo.end(); ++it)
+				{
+					interpret(*it, false, false);
+				}
+				urDelete=false;
+				cout << "OK\r\n#" << undo.size() - 1 << " object(s) deleted\r\n";
+			}
 		}
-		if(undo.front()=="DELETE"){
-			for(it=undo.begin()+1; it!=undo.end(); ++it)
-			{
-				interpret(*it, false, false);
-			}
-			cout << "OK\r\n#" << undo.size() - 1 << " objects created\r\n";
-		}
-		if(undo.front()=="INSERT"){
-			urDelete=true;
-			for(it=undo.begin()+1; it!=undo.end(); ++it)
-			{
-				interpret(*it, false, false);
-			}
-			urDelete=false;
-			cout << "OK\r\n#" << undo.size() - 1 << " objects deleted\r\n";
+		else
+		{	cout << "ERR\r\n#no command to undo\r\n";
 		}
     }
     else if(cmdGiven == cmdRedo.toString)
     {
         vector<string>redo=figure.Redo();
         vector<string> :: iterator it;
-
-        if(redo.front()=="INSERT"){
-			for(it=redo.begin()+1; it!=redo.end(); ++it)
-			{
-				interpret(*it, false, false);
+		
+		if(redo.size() > 0)
+		{
+		    if(redo.front()=="INSERT"){
+				for(it=redo.begin()+1; it!=redo.end(); ++it)
+				{
+					interpret(*it, false, false);
+				}
+				cout << "OK\r\n#" << redo.size() - 1 << " object(s) created\r\n";
 			}
-			cout << "OK\r\n#" << redo.size() - 1 << " objects created\r\n";
+			if(redo.front()=="MOVE"){
+				for(it=redo.begin()+1; it!=redo.end(); ++it)
+				{
+					interpret(*it, false, false);
+				}
+				cout << "OK\r\n#" << redo.size() - 1 << " object(s) moved\r\n";
+			}
+			if(redo.front()=="DELETE"){
+				urDelete=true;
+				for(it=redo.begin()+1; it!=redo.end(); ++it)
+				{
+					interpret(*it, false, false);
+				}
+				urDelete=false;
+				cout << "OK\r\n#" << redo.size() - 1 << " object(s) deleted\r\n";
+			}
 		}
-		if(redo.front()=="MOVE"){
-			for(it=redo.begin()+1; it!=redo.end(); ++it)
-			{
-				interpret(*it, false, false);
-			}
-			cout << "OK\r\n#" << redo.size() - 1 << " objects moved\r\n";
-		}
-		if(redo.front()=="DELETE"){
-			urDelete=true;
-			for(it=redo.begin()+1; it!=redo.end(); ++it)
-			{
-				interpret(*it, false, false);
-			}
-			urDelete=false;
-			cout << "OK\r\n#" << redo.size() - 1 << " objects deleted\r\n";
+		else
+		{	cout << "ERR\r\n#no undo before\r\n";
 		}
     }
     else if(cmdGiven == cmdLoad.toString)
@@ -400,7 +409,7 @@ void Application::interpret(string cmdString, bool enableHistory, bool verbose)
 					interpret(contenu, false, false);
 					history.push_back(contenu);
 				}
-				figure.SetHistory(history);
+				figure.AddToHistory(history);
 				fichier.close(); //Quand on a tout finit on ferme le fichier
 			}else{
 				cerr << "ERR\r\n#unable to open file" << endl;
@@ -423,6 +432,7 @@ void Application::interpret(string cmdString, bool enableHistory, bool verbose)
     else if(cmdGiven == cmdClear.toString)
     {
         figure.Clear(enableHistory);
+		cout << "OK\r\n#everything cleared\r\n";
     }
     else if(cmdGiven == cmdExit.toString)
     {

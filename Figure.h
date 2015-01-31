@@ -109,7 +109,7 @@ public:
     // Contrat :
     //
 
-    void SetHistory(vector<string> histoire);
+    void AddToHistory(vector<string> histoire);
     // Mode d'emploi :
     //
     // Contrat :

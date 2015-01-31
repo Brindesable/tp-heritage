@@ -1,0 +1,6 @@
+C circle1 0 0 10
+C circle2 0 0 5
+S selection -20 -20 20 20
+MOVE selection 10 10
+UNDO
+LIST
