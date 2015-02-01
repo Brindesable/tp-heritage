@@ -30,8 +30,8 @@ using namespace std;
 //----------------------------------------------------- Méthodes publiques
 void Application::Launch()
 {
-    for (std::string line; std::getline(std::cin, line);) {
-       interpret(line, true, true);
+    bool quit = false;
+    for (std::string line; std::getline(std::cin, line) && interpret(line, true, true);) {
     }
 }
 
@@ -117,7 +117,7 @@ Application::~Application ( )
 //----------------------------------------------------- Méthodes protégées
 
 //------------------------------------------------------- Méthodes privées
-void Application::interpret(string cmdString, bool enableHistory, bool verbose)
+bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
 {
     stringstream cmdStringStream(cmdString);
     string cmdGiven;
@@ -436,7 +436,7 @@ void Application::interpret(string cmdString, bool enableHistory, bool verbose)
     }
     else if(cmdGiven == cmdExit.toString)
     {
-        cout << "exit\r\n";
+        return false;
     }
     else
     {   cout << "ERR\r\n#unknown command\r\n";
@@ -453,6 +453,8 @@ void Application::interpret(string cmdString, bool enableHistory, bool verbose)
             cout << "ERR\r\n#unknown object\r\n";
             break;
     }
+
+    return true;
 }
 
 bool Application::parseLine(CmdArgs & cmd, stringstream & line, int nbArgs)

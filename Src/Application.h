@@ -62,7 +62,7 @@ protected:
 
 private:
 //------------------------------------------------------- Méthodes privées
-    void interpret(string cmdLine, bool enableHistory, bool verbose);
+    bool interpret(string cmdLine, bool enableHistory, bool verbose);
 
     //infraction au guide de style, struct necessaire pour la fonction
     struct CmdArgs;
