@@ -1,0 +1,175 @@
+%Document written by Paul Dautry
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Bloc avec coloration syntaxique C++
+%\begin{lstlisting}
+%
+%\end{lstlisting}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Bloc de description d'une classe
+%\subsection{Classe}
+%\subsubsection{Rôle de la classe}
+%Cette classe à pour rôle de ...
+%\subsubsection{Constructeur, Destructeur \& opérateurs}
+%\subsubsection{Attributs}
+%Les attributs de cette classe sont les suivants :
+%\begin{itemize}
+%\item \emph{attribut}, description
+%\end{itemize}
+%\subsubsection{Méthodes}
+%Cette classe propose les méthodes suivantes :
+%\begin{lstlisting}
+%\end{lstlisting}
+%Description :
+
+\documentclass[10pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage[french]{babel}
+\usepackage[margin=1.5cm]{geometry}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{array}
+\usepackage{placeins}
+\usepackage{makecell}
+
+\author{Kilian Ollivier, \'Alvaro Gonz\'alez}
+\title{Document de spécifications des classes constituant le TP-Héritage}
+
+\makeindex
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SPECS BEGIN
+\maketitle
+\tableofcontents
+
+\lstset{language=C++, 
+                    %keywordstyle=\color{blue}, stringstyle=\color{red}, 
+                    keywordstyle=\color{black}, stringstyle=\color{black}, 
+                    identifierstyle=\color{black}, basicstyle=\color{black}, 
+                    %commentstyle=\color{green}}
+                    commentstyle=\color{black}}
+
+\newpage
+\section{Lexique}
+Termes et définitions :
+\begin{itemize}
+		\item
+\end{itemize}
+
+\section{Choix généraux de conception}
+\begin{itemize} 
+	\item
+\end{itemize}
+
+\section{Spécification des classes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CLASS File
+
+\subsection{Application}
+\subsubsection{Rôle de la classe}
+C'est la classe principale du programme. Elle gère les entrées fichier et ligne de commande, ainsi que leur interprétation et déclenche les opération associées à réaliser sur la figure.
+\subsubsection{Constructeur, Destructeur \& opérateurs}
+
+\subsubsection{Types personnalisés}
+Les types de la classe  Application :
+\begin{lstlisting}
+	struct CmdType
+    {   string toString;
+        int nbArgs;
+    };
+\end{lstlisting}
+\textbf{Description :} destiné à contenir les caractéristiques de chaque commande : la chaîne de caractère ("C", "R", "DELETE", etc), et le nombre de paramètre qu'elle prend (2, 3, \begin{math}\infty\end{math} pour "DELETE" et "POLYLIGNE", etc).
+
+\begin{lstlisting}
+	struct Cmd
+    {   vector<string> objects;
+        vector<int> numbers;
+    };
+\end{lstlisting}
+\textbf{Description :} destiné à contenir les arguments d'un commande
+
+\subsubsection{Attributs}
+Les attributs de la classe Application :
+\begin{itemize}
+	\item \emph{filename} (string), chemin relatif ou absolu du fichier.
+\end{itemize}
+\subsubsection{Méthodes}
+Les méthodes de la classe application :
+\begin{lstlisting}
+Launch();
+\end{lstlisting}
+\textbf{Description :} boucle principale de récupération des entrées clavier.
+\begin{lstlisting}
+void interpret(string cmdLine);
+\end{lstlisting}
+\textbf{Description :} prend en paramètre une ligne de commande et lance les bonnes actions sur la figure en fonction de cette commande.
+\begin{lstlisting}
+bool parseLine(Cmd & cmd, stringstream & line, int nbArgs);
+\end{lstlisting}
+\textbf{Description :} 
+\begin{lstlisting}
+bool Write(string str);
+\end{lstlisting}
+\textbf{Description :} écrit dans le fichier la chaîne \emph{str} passée en paramètre.
+\begin{lstlisting}
+ifstream * FileStream();
+\end{lstlisting}
+\textbf{Description :} retourne un pointeur vers le flux de lecture du fichier.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END
+
+\section{Description et justification des structures de données}
+\subsection{N\oe{}uds \& Arcs}
+Les n\oe{}uds et les arcs sont stockés séparément  dans deux arbres rouge noir dont les clés sont le label du n\oe{}ud ou la représentation sérialisée d'un arc. Cela permet de stocker chaque n\oe{}ud de manière unique et la recherche et l'insertion sont rapides (complexité $O(log(n))$).
+Cela permet aussi de générer de manière efficace le fichier \emph{GraphViz} ainsi que les statistiques (complexité $O(n)$).
+
+\begin{center}
+\begin{figure}[!ht]
+\centering
+%\includegraphics[scale=0.8]{graphics/memoryimp.png}
+\caption{Implentation en mémoire des données du graphe}
+\end{figure}
+\end{center}
+
+\FloatBarrier
+
+\section{Diagramme de classes}
+
+\begin{center}
+\begin{figure}[!ht]
+\centering
+%\includegraphics[scale=0.8]{graphics/dgclasses.png}
+\caption{Diagramme UML classes}
+\end{figure}
+\end{center}
+
+\FloatBarrier
+
+\section{Description des tests}
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\thead{Identifiant du test} & \thead{Nom du test} & \thead{Description synthétique du test} \\
+\hline
+\makecell{1} & \makecell{Test des statistiques} & \makecell[l]{Vérification du bon fonctionnement du programme en terme \\ d'élaboration de statistiques} \\
+\hline
+\makecell{2} & \makecell{Test du générateur Dot} & \makecell[l]{Vérification du  bon fonctionnement du programme en terme \\ de génération du fichier GraphViz (*.dot)} \\
+\hline
+\makecell{3} & \makecell{Test du filtre sur fichiers} & \makecell[l]{Vérification du bon fonctionnement du programme en terme \\ de filtrage des entrées de logs sur le type de fichier cible \\ (*.png, *.css, *.js)} \\
+\hline
+\makecell{4} & Test du filtre sur horaires &  \makecell[l]{Vérification du bon fonctionnement du programme en terme \\ de filtrage des entrées de logs sur l'horaire} \\
+\hline
+\makecell{5} & Test traitement log vide &  \makecell[l]{Vérification du bon fonctionnement du programme en terme \\ de traitement d'un fichier de log vide} \\
+\hline
+\makecell{6} & Test traitement entrée de log &  \makecell[l]{Vérification du bon fonctionnement du programme en terme \\ de traitement d'une entrée de log réduite au strict minimum \\ i.e. les paramètres non utilisés sont réduits à '-'} \\
+\hline
+\makecell{7} & Test traitement entrée de log &  \makecell[l]{Vérification du bon fonctionnement du programme en terme \\ de traitement d'une entrée de log réduite au strict minimum \\ i.e. les paramètres non utilisés sont réduits à '-'} \\
+\hline
+\end{tabular}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SPECS END
+\end{document}

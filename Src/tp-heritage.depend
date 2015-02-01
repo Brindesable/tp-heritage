@@ -1,0 +1,230 @@
+# depslib dependency file v1.0
+1422664299 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\circle.cpp
+	<iostream>
+	<string>
+	<sstream>
+	"Circle.h"
+
+1421791673 c:\users\kilian\documents\projets\c++\insa\tp-heritage\circle.h
+	<vector>
+	"Shape.h"
+
+1422703980 c:\users\kilian\documents\projets\c++\insa\tp-heritage\shape.h
+	<iostream>
+	<string>
+	<vector>
+	"Point.h"
+
+1421540737 c:\users\kilian\documents\projets\c++\insa\tp-heritage\point.h
+
+1422724313 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\figure.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	"Figure.h"
+	"Circle.h"
+	"Rectangle.h"
+	"Line.h"
+
+1422724343 c:\users\kilian\documents\projets\c++\insa\tp-heritage\figure.h
+	<map>
+	<vector>
+	"Shape.h"
+	"Selection.h"
+	"Application.h"
+
+1422710646 c:\users\kilian\documents\projets\c++\insa\tp-heritage\selection.h
+	<set>
+	"Shape.h"
+
+1421972455 c:\users\kilian\documents\projets\c++\insa\tp-heritage\rectangle.h
+	"Polyline.h"
+
+1422019806 c:\users\kilian\documents\projets\c++\insa\tp-heritage\polyline.h
+	<vector>
+	"Shape.h"
+
+1421539371 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\main.cpp
+	"Application.h"
+
+1421538197 c:\users\kilian\documents\projets\c++\insa\tp-heritage\main.h
+	<vector>
+
+1421794399 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\point.cpp
+	<iostream>
+	"Point.h"
+
+1422664299 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\polyline.cpp
+	<iostream>
+	<sstream>
+	"Polyline.h"
+
+1422050371 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\rectangle.cpp
+	<iostream>
+	<sstream>
+	"Rectangle.h"
+
+1422710637 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\selection.cpp
+	<iostream>
+	<sstream>
+	"Selection.h"
+
+1422703976 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\shape.cpp
+	<iostream>
+	"Shape.h"
+
+1422712858 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\application.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	"Application.h"
+	"Figure.h"
+
+1422711193 c:\users\kilian\documents\projets\c++\insa\tp-heritage\application.h
+	<vector>
+	<string>
+
+1421977089 c:\users\kilian\documents\projets\c++\insa\tp-heritage\line.h
+	<vector>
+	"Polyline.h"
+
+1422664299 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\line.cpp
+	<iostream>
+	<sstream>
+	"Line.h"
+
+1422798797 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\application.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	"Application.h"
+	"Figure.h"
+
+1422711193 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\application.h
+	<vector>
+	<string>
+
+1422798673 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\figure.h
+	<map>
+	<vector>
+	"Shape.h"
+	"Selection.h"
+	"Application.h"
+
+1422703980 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\shape.h
+	<iostream>
+	<string>
+	<vector>
+	"Point.h"
+
+1421540737 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\point.h
+
+1422710646 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\selection.h
+	<set>
+	"Shape.h"
+
+1422745170 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\circle.cpp
+	<iostream>
+	<string>
+	<sstream>
+	"Circle.h"
+
+1421791673 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\circle.h
+	<vector>
+	"Shape.h"
+
+1422799376 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\figure.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	"Figure.h"
+	"Circle.h"
+	"Rectangle.h"
+	"Line.h"
+
+1421972455 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\rectangle.h
+	"Polyline.h"
+
+1422019806 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\polyline.h
+	<vector>
+	"Shape.h"
+
+1421977089 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\line.h
+	<vector>
+	"Polyline.h"
+
+1422664299 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\line.cpp
+	<iostream>
+	<sstream>
+	"Line.h"
+
+1421794399 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\point.cpp
+	<iostream>
+	"Point.h"
+
+1422747442 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\polyline.cpp
+	<iostream>
+	<sstream>
+	"Polyline.h"
+
+1422050371 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\rectangle.cpp
+	<iostream>
+	<sstream>
+	"Rectangle.h"
+
+1422797325 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\selection.cpp
+	<iostream>
+	<sstream>
+	"Selection.h"
+
+1422703976 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\shape.cpp
+	<iostream>
+	"Shape.h"
+
+1422799029 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\main.cpp
+	"Application.h"
+	<iostream>
+	"UnitTests/TCircle.h"
+	"UnitTests/TLine.h"
+	"UnitTests/TPolyline.h"
+	"UnitTests/TRectangle.h"
+	"UnitTests/TSelection.h"
+	"UnitTests/TFigure.h"
+
+1422744363 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\unittests\tcircle.h
+
+1422745201 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\unittests\tcircle.cpp
+	"../Circle.h"
+	"../Point.h"
+	"TCircle.h"
+
+1422746154 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\unittests\tline.h
+
+1422746052 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\unittests\tline.cpp
+	"TLine.h"
+	"../Line.h"
+
+1422752400 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\unittests\tpolyline.cpp
+	"TPolyline.h"
+	"../Line.h"
+
+1422747071 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\unittests\tpolyline.h
+
+1422790341 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\unittests\trectangle.h
+
+1422790341 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\unittests\trectangle.cpp
+	"TRectangle.h"
+	"../Rectangle.h"
+	<vector>
+
+1422797029 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\unittests\tselection.h
+
+1422797350 source:c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\unittests\tselection.cpp
+	"TSelection.h"
+	"../Selection.h"
+	"../Circle.h"
+	"../Rectangle.h"
+	<iostream>
+
+1422799039 c:\users\kilian\documents\projets\c++\insa\tp-heritage\src\unittests\tfigure.h
+
