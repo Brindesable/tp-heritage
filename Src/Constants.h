@@ -1,0 +1,14 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+enum Code
+{
+    OK = 1,
+    NAME_ALREADY_USED,
+    INEXISTING_OBJECT,
+    ERROR_SYNTAX,
+    ERROR_LOADING,
+    EXIT
+};
+
+#endif // CONSTANTS_H
