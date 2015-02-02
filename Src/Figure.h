@@ -11,20 +11,14 @@
 
 #include <map>
 #include <vector>
+//--------------------------------------------------- Interfaces utilisées
+#include "Constants.h"
 #include "Shape.h"
 #include "Selection.h"
-#include "Application.h"
-//--------------------------------------------------- Interfaces utilisées
-
 //------------------------------------------------------------- Constantes
 
 //------------------------------------------------------------------ Types
-enum Code
-{
-    OK = 1,
-    NAME_ALREADY_USED,
-    INEXISTING_OBJECT
-};
+
 //------------------------------------------------------------------------
 // Rôle de la classe <Figure>
 //
@@ -41,31 +35,31 @@ public:
     // Mode d'emploi :
     //
     // Contrat :
-    //
+    //      data contient 4 cases
 
     Code AddCircle ( string name, vector<long> & data, bool enableHistory);
     // Mode d'emploi :
     //
     // Contrat :
-    //
+    //      data contient 3 cases
 
     Code AddRectangle ( string name, vector<long> & data, bool enableHistory );
     // Mode d'emploi :
     //
     // Contrat :
-    //
+    //     data contient 4 cases
 
     Code AddLine ( string name, vector<long> & data, bool enableHistory );
     // Mode d'emploi :
     //
     // Contrat :
-    //
+    //      data contient 4 cases
 
     Code AddPolyline ( string name, vector<long> & data, bool enableHistory );
     // Mode d'emploi :
     //
     // Contrat :
-    //
+    //  data contient de 2*n (n!= 0) cases
 
     Code Move (string name, vector<long> dXY, bool enableHistory, int & nbObjectsMoved);
     // Mode d'emploi :
@@ -142,7 +136,9 @@ protected:
 private:
 //------------------------------------------------------- Méthodes privées
     bool shapeExists(string name);
+
     bool selectionExists(string name);
+
     void history(string action, string objects);
 
 protected:

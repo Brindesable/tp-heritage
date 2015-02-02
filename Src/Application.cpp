@@ -30,8 +30,8 @@ using namespace std;
 //----------------------------------------------------- Méthodes publiques
 void Application::Launch()
 {
-    bool quit = false;
-    for (std::string line; std::getline(std::cin, line) && interpret(line, true, true);) {
+    //main loop
+    for (std::string line; std::getline(std::cin, line) && interpret(line, true, true) != EXIT;) {
     }
 }
 
@@ -117,7 +117,7 @@ Application::~Application ( )
 //----------------------------------------------------- Méthodes protégées
 
 //------------------------------------------------------- Méthodes privées
-bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
+Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 {
     stringstream cmdStringStream(cmdString);
     string cmdGiven;
@@ -126,10 +126,13 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
 
     cmdStringStream >> cmdGiven;
 
+    //================================================================================= Command C
     if(cmdGiven == cmdCircle.toString)
-    {   if(parseLine(cmd, cmdStringStream, cmdCircle.nbArgs))
-        {
-			if(!urDelete){
+    {   //la ligne est bien formee
+        if(parseLine(cmd, cmdStringStream, cmdCircle.nbArgs))
+        {   //ce n'est pas une commande "reverse"
+            if(!urDelete){
+				//ajout du cercle
 				code = figure.AddCircle(cmd.objects.at(0), cmd.numbers, enableHistory);
 				if(verbose)
                 {
@@ -146,17 +149,21 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
                 }
             }
             else
-            {   interpret("DELETE " + cmd.objects.at(0), enableHistory, verbose);
+            {   //suppression du cercle
+                interpret("DELETE " + cmd.objects.at(0), enableHistory, verbose);
 			}
         }
         else
-        {   cout << "ERR\r\n#error syntax\r\n";
+        {   code = ERROR_SYNTAX;
         }
     }
+    //================================================================================= Command R
     else if(cmdGiven == cmdRectangle.toString)
-    {   if(parseLine(cmd, cmdStringStream, cmdRectangle.nbArgs))
-        {
+    {   //la ligne est bien formee
+        if(parseLine(cmd, cmdStringStream, cmdRectangle.nbArgs))
+        {   //ce n'est pas un commande "reverse" (undo/redo)
 			if(!urDelete){
+				//insertion du rectangle
 				code = figure.AddRectangle(cmd.objects.at(0), cmd.numbers, enableHistory);
 				if(verbose)
                 {
@@ -173,18 +180,22 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
                 }
             }
             else
-            {   interpret("DELETE " + cmd.objects.at(0),enableHistory, verbose);
+            {   //suppression du rectangle
+                interpret("DELETE " + cmd.objects.at(0),enableHistory, verbose);
 			}
         }
         else
-        {   cout << "ERR\r\n#error syntax\r\n";
+        {   code = ERROR_SYNTAX;
         }
     }
+    //================================================================================= Command L
     else if(cmdGiven == cmdLine.toString)
-    {   if(parseLine(cmd, cmdStringStream, cmdLine.nbArgs))
-        {
-			if(!urDelete)
-            {   code = figure.AddLine(cmd.objects.at(0), cmd.numbers, enableHistory);
+    {   //commande bien formee
+        if(parseLine(cmd, cmdStringStream, cmdLine.nbArgs))
+        {   //ce n'est pas une commande "reverse"
+            if(!urDelete)
+            {   //insertion de la ligne
+                code = figure.AddLine(cmd.objects.at(0), cmd.numbers, enableHistory);
 				if(verbose)
                 {
                     switch(code)
@@ -200,21 +211,24 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
                 }
             }
             else
-			{   interpret("DELETE "+cmd.objects.at(0),enableHistory, verbose);
+			{   //suppression de la ligne
+			    interpret("DELETE "+cmd.objects.at(0),enableHistory, verbose);
 			}
         }
         else
-        {   cout << "ERR\r\n#error syntax\r\n";
+        {   code = ERROR_SYNTAX;
         }
     }
+    //================================================================================= Command PL
     else if(cmdGiven == cmdPolyline.toString)
-    {   if(parseLine(cmd, cmdStringStream, cmdPolyline.nbArgs))
-        {
-            if(!urDelete){
+    {   //commande bien formee
+        if(parseLine(cmd, cmdStringStream, cmdPolyline.nbArgs))
+        {   //ce n'est pas une commande reverse
+            if(!urDelete)
+			{   //insertion de la polyligne
 				code = figure.AddPolyline(cmd.objects.at(0), cmd.numbers, enableHistory);
 				if(verbose)
-                {
-                    switch(code)
+                {   switch(code)
                     {
                         case OK:
                             cout << "OK\r\n#1 object(s) created\r\n";
@@ -227,16 +241,20 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
                 }
             }
             else
-            {   interpret("DELETE " + cmd.objects.at(0), enableHistory, verbose);
+            {   //suppression de la polyligne
+                interpret("DELETE " + cmd.objects.at(0), enableHistory, verbose);
 			}
         }
         else
-        {   cout << "ERR\r\n#error syntax\r\n";
+        {   code = ERROR_SYNTAX;
         }
     }
+    //================================================================================= Command S
     else if(cmdGiven == cmdSelection.toString)
-    {   if(parseLine(cmd, cmdStringStream, cmdSelection.nbArgs))
-        {   int nbObjects = 0;
+    {   //commande bien formee
+        if(parseLine(cmd, cmdStringStream, cmdSelection.nbArgs))
+        {   //nombre d'objets selectionnes
+            int nbObjects = 0;
             code = figure.AddSelection(cmd.objects.at(0), cmd.numbers, nbObjects);
             switch(code)
             {
@@ -255,12 +273,15 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
             }
         }
         else
-        {   cout << "ERR\r\n#error syntax\r\n";
+        {   code = ERROR_SYNTAX;
         }
     }
+    //================================================================================= Command DELETE
     else if(cmdGiven == cmdDelete.toString)
-    {   if(parseLine(cmd, cmdStringStream, cmdDelete.nbArgs))
-        {   int nbObjects = 0;
+    {   //commande bien formee
+        if(parseLine(cmd, cmdStringStream, cmdDelete.nbArgs))
+        {   //nombre d'objets qui vont etre supprimes
+            int nbObjects = 0;
             code = figure.Delete(cmd.objects, enableHistory, nbObjects);
             if(verbose)
             {
@@ -282,19 +303,24 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
             }
         }
         else
-        {   cout << "ERR\r\n#error syntax\r\n";
+        {   code = ERROR_SYNTAX;
         }
     }
+    //================================================================================= Command MOVE
     else if(cmdGiven == cmdMove.toString)
-    {   if(parseLine(cmd, cmdStringStream, cmdMove.nbArgs))
-        {   int nbObjects = 0;
+    {   //commande bien formee
+        if(parseLine(cmd, cmdStringStream, cmdMove.nbArgs))
+        {   //nb d'objets qui vont bouger
+            int nbObjects = 0;
+
+			//si la commande est "reverse", on inverse les direction
 			if(urMove)
 			{   vector<long>::iterator it;
 				for(it=cmd.numbers.begin(); it!=cmd.numbers.end(); ++it)
-				{
-					(*it)=0-(*it);
+				{   (*it)=0-(*it);
 				}
 			}
+
 			code = figure.Move(cmd.objects.at(0), cmd.numbers, enableHistory, nbObjects);
             if(verbose)
             {
@@ -316,20 +342,24 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
             }
         }
         else
-        {   cout << "ERR\r\n#error syntax\r\n";
+        {   code = ERROR_SYNTAX;
         }
     }
+    //================================================================================= Command LIST
     else if(cmdGiven == cmdEnum.toString)
-    {
+    {   //liste de tous les objets
         cout << figure.List();
     }
+    //================================================================================= Command UNDO
     else if(cmdGiven == cmdUndo.toString)
     {
+        //on va chercher l'historique de la dernière commande
 		vector<string>undo=figure.Undo();
 		vector<string> :: iterator it;
 
+        //si elle existe
 		if(undo.size() > 0)
-		{
+		{   //si on doit undo un MOVE, on appelle l'interpreteur en specifiant le reverse
 			if(undo.front()=="MOVE")
 		    {   urMove=true;
 				for(it=undo.begin()+1; it!=undo.end(); ++it)
@@ -339,6 +369,7 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
 				urMove=false;
 		        cout << "OK\r\n#" << undo.size() - 1 << " object(s) moved\r\n";
 			}
+			//si on doit undo un DELETE, on recree les objets supprimes
 			if(undo.front()=="DELETE"){
 				for(it=undo.begin()+1; it!=undo.end(); ++it)
 				{
@@ -346,6 +377,7 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
 				}
 				cout << "OK\r\n#" << undo.size() - 1 << " object(s) created\r\n";
 			}
+			//si on doit undo un INSERT, on supprime les objets ajoute
 			if(undo.front()=="INSERT"){
 				urDelete=true;
 				for(it=undo.begin()+1; it!=undo.end(); ++it)
@@ -360,13 +392,14 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
 		{	cout << "ERR\r\n#no command to undo\r\n";
 		}
     }
+    //================================================================================= Command REDO
     else if(cmdGiven == cmdRedo.toString)
-    {
+    {   //on recupere les commandes qui viennent d'etre UNDO
         vector<string>redo=figure.Redo();
         vector<string> :: iterator it;
 
 		if(redo.size() > 0)
-		{
+		{   // si c'est un INSERT, on recree les objets
 		    if(redo.front()=="INSERT"){
 				for(it=redo.begin()+1; it!=redo.end(); ++it)
 				{
@@ -374,6 +407,7 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
 				}
 				cout << "OK\r\n#" << redo.size() - 1 << " object(s) created\r\n";
 			}
+			// si c'est un move, on bouge normalement les formes
 			if(redo.front()=="MOVE"){
 				for(it=redo.begin()+1; it!=redo.end(); ++it)
 				{
@@ -381,6 +415,7 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
 				}
 				cout << "OK\r\n#" << redo.size() - 1 << " object(s) moved\r\n";
 			}
+			// si c'est un delete, on resupprime les formes
 			if(redo.front()=="DELETE"){
 				urDelete=true;
 				for(it=redo.begin()+1; it!=redo.end(); ++it)
@@ -395,66 +430,104 @@ bool Application::interpret(string cmdString, bool enableHistory, bool verbose)
 		{	cout << "ERR\r\n#no undo before\r\n";
 		}
     }
+    //================================================================================= Command LOAD
     else if(cmdGiven == cmdLoad.toString)
-    {   if(parseLine(cmd, cmdStringStream, cmdLoad.nbArgs))
-        {
-			ifstream fichier (cmd.objects.at(0).c_str(), ios::in);// on ouvre en lecture
-			if(fichier)  // si l'ouverture a fonctionné
+    {   //la commande est bien formee
+        if(parseLine(cmd, cmdStringStream, cmdLoad.nbArgs))
+        {   // on ouvre en lecture
+			ifstream fichier (cmd.objects.at(0).c_str(), ios::in);
+			// si l'ouverture a fonctionné
+			if(fichier)
 			{
+			    //historique des commandes d'insertion qui vont être réalisées
 				vector<string>history;
 				history.push_back("INSERT");
-				string contenu;  // déclaration d'une chaîne qui contiEndRa la ligne lue
-				while(getline(fichier, contenu))
-				{  // on met la ligne dans "contenu"
-					interpret(contenu, false, false);
-					history.push_back(contenu);
+				// déclaration d'une chaîne qui contiEndRa la ligne lue
+				string contenu;
+				//code de l'insertion
+				Code codeLoad = OK;
+				//pour chaque ligne du fichier
+				while(getline(fichier, contenu) && codeLoad == OK)
+				{   //on interprete la ligne du fichier
+					codeLoad = interpret(contenu, false, false);
+					//si l'insertion a fonctionne
+					if(codeLoad == OK)
+                    {   history.push_back(contenu);
+                    }
 				}
-				figure.AddToHistory(history);
+				//si toutes les insertions du fichier on fonctionnés sans erreur
+				if(codeLoad == OK)
+                {   figure.AddToHistory(history);
+                    code = OK;
+                    cout << "OK\r\n#" << history.size() - 1 << " object(s) created\r\n";
+                }
+                //sinon on n'enregistre pas l'historique et on defait tout les commandes
+                else
+                {   urDelete=true;
+                    for(int i = 1; i < history.size(); i++)
+                    {   interpret(history[i], false, false);
+                    }
+                    urDelete=false;
+                    code = ERROR_LOADING;
+                }
 				fichier.close(); //Quand on a tout finit on ferme le fichier
-			}else{
-				cerr << "ERR\r\n#unable to open file" << endl;
+			}
+			else
+			{   cout << "ERR\r\n#unable to open file" << endl;
 			}
 		}
         else
-        {   cout << "ERR\r\n#error syntax\r\n";
+        {   code = ERROR_SYNTAX;
         }
     }
+    //================================================================================= Command SAVE
     else if(cmdGiven == cmdSave.toString)
-    {   if(parseLine(cmd, cmdStringStream, cmdSave.nbArgs))
-        {
+    {   //la commande est bien formee
+        if(parseLine(cmd, cmdStringStream, cmdSave.nbArgs))
+        {   //la figure sauvegarde elle meme le fichier
             figure.Save(cmd.objects.at(0));
             cout << "OK\r\n";
         }
         else
-        {   cout << "ERR\r\n#error syntax\r\n";
+        {   code = ERROR_SYNTAX;
         }
     }
+    //================================================================================= Command CLEAR
     else if(cmdGiven == cmdClear.toString)
-    {
-        figure.Clear(enableHistory);
+    {   figure.Clear(enableHistory);
 		cout << "OK\r\n#everything cleared\r\n";
     }
+    //================================================================================= Command EXIT
     else if(cmdGiven == cmdExit.toString)
-    {
-        return false;
+    {   code = EXIT;
     }
+    //=================================================================================
     else
-    {   cout << "ERR\r\n#unknown command\r\n";
+    {   code = ERROR_SYNTAX;
     }
 
-    switch(code)
+    if(verbose)
     {
-		case OK :
-			break;
-        case NAME_ALREADY_USED :
-            cout << "ERR\r\n#name already used\r\n";
-            break;
-        case INEXISTING_OBJECT :
-            cout << "ERR\r\n#unknown object\r\n";
-            break;
+        switch(code)
+        {
+            case OK :
+                break;
+            case NAME_ALREADY_USED :
+                cout << "ERR\r\n#name already used\r\n";
+                break;
+            case INEXISTING_OBJECT :
+                cout << "ERR\r\n#unknown object\r\n";
+                break;
+            case ERROR_SYNTAX :
+                cout << "ERR\r\n#error syntax\r\n";
+                break;
+            case ERROR_LOADING :
+                cout << "ERR\r\n#loading error\r\n";
+                break;
+        }
     }
 
-    return true;
+    return code;
 }
 
 bool Application::parseLine(CmdArgs & cmd, stringstream & line, int nbArgs)

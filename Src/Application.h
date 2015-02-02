@@ -13,11 +13,12 @@
 #include <string>
 using namespace std;
 //--------------------------------------------------- Interfaces utilisées
-
+#include "Constants.h"
+#include "Figure.h"
 //------------------------------------------------------------- Constantes
 
 //------------------------------------------------------------------ Types
-class Figure;
+
 //------------------------------------------------------------------------
 // Rôle de la classe <Application>
 //
@@ -62,7 +63,7 @@ protected:
 
 private:
 //------------------------------------------------------- Méthodes privées
-    bool interpret(string cmdLine, bool enableHistory, bool verbose);
+    Code interpret(string cmdLine, bool enableHistory, bool verbose);
 
     //infraction au guide de style, struct necessaire pour la fonction
     struct CmdArgs;

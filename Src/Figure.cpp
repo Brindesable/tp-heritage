@@ -237,32 +237,27 @@ string Figure::List ()
 {   map<string,Shape*>::iterator it;
     stringstream ss;
 
+    //pour chaque forme, on recupere sa commande associee
 	if(shapes.size() > 0)
 	{	for(it=shapes.begin(); it!=shapes.end(); ++it)
 		{   ss << it->second->Command() << "\r\n";
 		}
 	}
+	//s'il n'y a aucune forme
 	else
 	{	ss << "#anything created yet\r\n";
 	}
 
 	return ss.str();
-
-    /*cout << "[Debug] history : " << endl;
-	for(unsigned int i = 0; i < commands.size(); i++)
-    {   for(unsigned int j = 0; j < commands.at(i).size(); j++)
-        {   cout  << commands.at(i).at(j) << " ";
-        }
-        cout << endl;
-    }*/
 } //----- Fin de Méthode
 
 void Figure::Save (string nomFichier)
 // Algorithme :
 //
-{
-	ofstream fichier(nomFichier.c_str(), ios::out); //on ouvre le fichier en écriture
+{   //on ouvre le fichier en écriture
+	ofstream fichier(nomFichier.c_str(), ios::out);
 
+    //s'il est accessible
 	if(fichier)
 	{
 		map<string,Shape*>::iterator it;
@@ -439,12 +434,12 @@ Figure::~Figure ( )
     }
 } //----- Fin de ~Figure
 
-
 //------------------------------------------------------------------ PRIVE
 
 //----------------------------------------------------- Méthodes protégées
 
 //------------------------------------------------------- Méthodes privées
+
 bool Figure::shapeExists(string name)
 {   //iterateurs sur arbres
     map<string,Shape*>::iterator it;
