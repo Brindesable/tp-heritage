@@ -126,6 +126,9 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 
     cmdStringStream >> cmdGiven;
 
+    if(cmdGiven[0] == '#')
+    {   code = COMMENT;
+    }
     //================================================================================= Command C
     if(cmdGiven == cmdCircle.toString)
     {   //la ligne est bien formee
@@ -134,18 +137,9 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
             if(!urDelete){
 				//ajout du cercle
 				code = figure.AddCircle(cmd.objects.at(0), cmd.numbers, enableHistory);
-				if(verbose)
-                {
-                    switch(code)
-                    {
-                        case OK:
-                            cout << "OK\r\n#1 object(s) created\r\n";
-                            break;
-                        case NAME_ALREADY_USED :
-                            break;
-                        case INEXISTING_OBJECT :
-                            break;
-                    }
+
+				if(verbose && code == OK)
+                {   cout << "OK\r\n#1 object(s) created\r\n";
                 }
             }
             else
@@ -165,18 +159,8 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 			if(!urDelete){
 				//insertion du rectangle
 				code = figure.AddRectangle(cmd.objects.at(0), cmd.numbers, enableHistory);
-				if(verbose)
-                {
-                    switch(code)
-                    {
-                        case OK:
-                            cout << "OK\r\n#1 object(s) created\r\n";
-                            break;
-                        case NAME_ALREADY_USED :
-                            break;
-                        case INEXISTING_OBJECT :
-                            break;
-                    }
+				if(verbose && code == OK)
+                {   cout << "OK\r\n#1 object(s) created\r\n";
                 }
             }
             else
@@ -196,18 +180,8 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
             if(!urDelete)
             {   //insertion de la ligne
                 code = figure.AddLine(cmd.objects.at(0), cmd.numbers, enableHistory);
-				if(verbose)
-                {
-                    switch(code)
-                    {
-                        case OK:
-                            cout << "OK\r\n#1 object(s) created\r\n";
-                            break;
-                        case NAME_ALREADY_USED :
-                            break;
-                        case INEXISTING_OBJECT :
-                            break;
-                    }
+				if(verbose && code == OK)
+                {   cout << "OK\r\n#1 object(s) created\r\n";
                 }
             }
             else
@@ -227,17 +201,8 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
             if(!urDelete)
 			{   //insertion de la polyligne
 				code = figure.AddPolyline(cmd.objects.at(0), cmd.numbers, enableHistory);
-				if(verbose)
-                {   switch(code)
-                    {
-                        case OK:
-                            cout << "OK\r\n#1 object(s) created\r\n";
-                            break;
-                        case NAME_ALREADY_USED :
-                            break;
-                        case INEXISTING_OBJECT :
-                            break;
-                    }
+				if(verbose && code == OK)
+                {   cout << "OK\r\n#1 object(s) created\r\n";
                 }
             }
             else
@@ -256,20 +221,13 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
         {   //nombre d'objets selectionnes
             int nbObjects = 0;
             code = figure.AddSelection(cmd.objects.at(0), cmd.numbers, nbObjects);
-            switch(code)
-            {
-                case OK:
-                    if(nbObjects > 0)
-                    {   cout << "OK\r\n#" << nbObjects << " object(s) selected\r\n";
-                    }
-                    else
-                    {   cout << "ERR\r\n#0 object(s) selected\r\n";
-                    }
-                    break;
-                case NAME_ALREADY_USED :
-					break;
-				case INEXISTING_OBJECT :
-					break;
+            if(code == OK)
+            {   if(nbObjects > 0)
+                {   cout << "OK\r\n#" << nbObjects << " object(s) selected\r\n";
+                }
+                else
+                {   cout << "ERR\r\n#0 object(s) selected\r\n";
+                }
             }
         }
         else
@@ -283,22 +241,13 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
         {   //nombre d'objets qui vont etre supprimes
             int nbObjects = 0;
             code = figure.Delete(cmd.objects, enableHistory, nbObjects);
-            if(verbose)
-            {
-                switch(code)
-                {
-                    case OK:
-                        if(nbObjects > 0)
-                        {   cout << "OK\r\n#" << nbObjects << " object(s) deleted\r\n";
-                        }
-                        else
-                        {   cout << "ERR\r\n#0 object(s) deleted\r\n";
-                        }
-                        break;
-                    case NAME_ALREADY_USED :
-                        break;
-                    case INEXISTING_OBJECT :
-                        break;
+
+            if(verbose && code == OK)
+            {   if(nbObjects > 0)
+                {   cout << "OK\r\n#" << nbObjects << " object(s) deleted\r\n";
+                }
+                else
+                {   cout << "ERR\r\n#0 object(s) deleted\r\n";
                 }
             }
         }
@@ -322,22 +271,12 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 			}
 
 			code = figure.Move(cmd.objects.at(0), cmd.numbers, enableHistory, nbObjects);
-            if(verbose)
-            {
-                switch(code)
-                {
-                    case OK:
-                        if(nbObjects > 0)
-                        {   cout << "OK\r\n#" << nbObjects << " object(s) moved\r\n";
-                        }
-                        else
-                        {   cout << "ERR\r\n#0 object(s) moved\r\n";
-                        }
-                        break;
-                    case NAME_ALREADY_USED :
-                        break;
-                    case INEXISTING_OBJECT :
-                        break;
+            if(verbose && code == OK)
+            {   if(nbObjects > 0)
+                {   cout << "OK\r\n#" << nbObjects << " object(s) moved\r\n";
+                }
+                else
+                {   cout << "ERR\r\n#0 object(s) moved\r\n";
                 }
             }
         }
@@ -447,7 +386,7 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 				//code de l'insertion
 				Code codeLoad = OK;
 				//pour chaque ligne du fichier
-				while(getline(fichier, contenu) && codeLoad == OK)
+				while(getline(fichier, contenu) && (codeLoad == OK || codeLoad == COMMENT))
 				{   //on interprete la ligne du fichier
 					codeLoad = interpret(contenu, false, false);
 					//si l'insertion a fonctionne
@@ -462,7 +401,7 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
                     cout << "OK\r\n#" << history.size() - 1 << " object(s) created\r\n";
                 }
                 //sinon on n'enregistre pas l'historique et on defait tout les commandes
-                else
+                else if(code != COMMENT)
                 {   urDelete=true;
                     for(int i = 1; i < history.size(); i++)
                     {   interpret(history[i], false, false);
@@ -511,6 +450,8 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
         switch(code)
         {
             case OK :
+                break;
+            case COMMENT :
                 break;
             case NAME_ALREADY_USED :
                 cout << "ERR\r\n#name already used\r\n";

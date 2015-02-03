@@ -10,7 +10,6 @@
 //---------------------------------------------------------------- INCLUDE
 
 //-------------------------------------------------------- Include système
-#include <iostream>
 #include <fstream>
 #include <sstream>
 using namespace std;
@@ -164,7 +163,7 @@ Code Figure::AddSelection ( string name, vector<long> & data, int & nbObjSelecte
                 {   //si la forme est dans la selection
                     selec.AddShape(it->second);
                     //on signale à la forme qu'elle est dans une nouvelle selection
-                    it->second->addSelection(name);
+                    it->second->AddSelection(name);
                     //comptage des objets dans la selection
                     nbObjSelected++;
                 }

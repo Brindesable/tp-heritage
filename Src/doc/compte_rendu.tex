@@ -55,119 +55,415 @@
 \section{Lexique}
 Termes et définitions :
 \begin{itemize}
-		\item
+		\item Ce qui sera appelé \emph{objet} dans la suite de ce document est une instance de la classe Shape.
 \end{itemize}
 
 \section{Choix généraux de conception}
 \begin{itemize} 
-	\item
+	\item L'historique est stocké sous forme sérialisée (plus facile à stocker étant donné le nombre de formes disponibles).\\
+	IN :
+	\begin{lstlisting}
+C c1 0 0 10
+C c2 0 0 5
+S s -20 -20 20 20
+MOVE s 1 1
+DELETE s
+	\end{lstlisting}
+	Historique (vector< vector<string> >) :\\\\
+	\begin{tabular}{cccc}
+  		INSERT & C c1 0 0 10\\
+  		INSERT & C c2 0 0 5\\
+  		MOVE & C c1 1 1 & C c2 1 1\\
+  		DELETE & C c1 1 1 10 & C c2 1 1\\
+	\end{tabular}\\\\
+	
+	\item Les opération d'entrées/sortie standard sont concentrées dans la classe Application (séparation de la vue).
+	
+	\item Les formes et les sélections sont stockées dans des maps de la libraires standard pour anticiper un grand nombre de recherche par nom.
+	
 \end{itemize}
 
 \section{Spécification des classes}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CLASS File
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Classe Application
 
 \subsection{Application}
 \subsubsection{Rôle de la classe}
-C'est la classe principale du programme. Elle gère les entrées fichier et ligne de commande, ainsi que leur interprétation et déclenche les opération associées à réaliser sur la figure.
-\subsubsection{Constructeur, Destructeur \& opérateurs}
+C'est la classe principale du programme. Elle gère les entrées fichier et ligne de commande, leur interprétation et déclenche les opération associées à réaliser sur la figure.
 
 \subsubsection{Types personnalisés}
 Les types de la classe  Application :
 \begin{lstlisting}
 	struct CmdType
-    {   string toString;
-        int nbArgs;
-    };
+	{	
+		string toString;
+		int nbArgs;
+	};
 \end{lstlisting}
 \textbf{Description :} destiné à contenir les caractéristiques de chaque commande : la chaîne de caractère ("C", "R", "DELETE", etc), et le nombre de paramètre qu'elle prend (2, 3, \begin{math}\infty\end{math} pour "DELETE" et "POLYLIGNE", etc).
 
 \begin{lstlisting}
 	struct Cmd
-    {   vector<string> objects;
-        vector<int> numbers;
-    };
+	{	
+		vector<string> objects;
+		vector<int> numbers;
+	};
 \end{lstlisting}
 \textbf{Description :} destiné à contenir les arguments d'un commande
 
 \subsubsection{Attributs}
 Les attributs de la classe Application :
 \begin{itemize}
-	\item \emph{filename} (string), chemin relatif ou absolu du fichier.
+	\item \emph{figure} (Figure \&), figure contenant les formes.
 \end{itemize}
 \subsubsection{Méthodes}
-Les méthodes de la classe application :
+Les méthodes de la classe Application :
 \begin{lstlisting}
 Launch();
 \end{lstlisting}
 \textbf{Description :} boucle principale de récupération des entrées clavier.
 \begin{lstlisting}
-void interpret(string cmdLine);
+Code interpret(string cmdLine, bool enableHistory, bool verbose);
 \end{lstlisting}
-\textbf{Description :} prend en paramètre une ligne de commande et lance les bonnes actions sur la figure en fonction de cette commande.
+\textbf{Description :} prend en paramètre une ligne de commande, et lance les bonnes actions sur la figure en fonction de cette commande. On peut également choisir de désactiver le stockage de la commande (enableHistory = false) ainsi que la sortie standart (verbose = false).
 \begin{lstlisting}
 bool parseLine(Cmd & cmd, stringstream & line, int nbArgs);
 \end{lstlisting}
-\textbf{Description :} 
+\textbf{Description :} Découpe la commande et la place dans dans la structure "cmd" passée par référence. Ex "MOVE circle 1 2" => cmd.objects[0] = "circle", cmd.numbers[0] = 1, cmd.numbers[1] = 2 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Classe Figure
+
+\subsection{Figure}
+\subsubsection{Rôle de la classe}
+C'est la classe qui contient toutes les formes et permet de les manipuler.
+
+\subsubsection{Attributs}
+Les attributs de la classe Figure :
+\begin{itemize}
+	\item \emph{figure} (Figure \&), figure contenant les formes.
+	\item \emph{shapes} (map<string, Shape *>), ensemble de toutes les formes de la figure.
+	\item \emph{selections} (map<string, Selection>), ensemble de toutes les sélections de la figure. 
+	\item \emph{commands} (vector< vector<string> >), historique des commandes (pour le undo).
+	\item \emph{redo} (vector< vector<string> >), historique des commandes undo (pour le redo).
+\end{itemize}
+\subsubsection{Méthodes}
+Les méthodes de la classe Figure :
+
 \begin{lstlisting}
-bool Write(string str);
+Code AddCircle ( string name, vector<long> & data, bool enableHistory);
 \end{lstlisting}
-\textbf{Description :} écrit dans le fichier la chaîne \emph{str} passée en paramètre.
+\textbf{Description :} ajoute un cercle de nom "name" et dont les caractéristiques sont contenues dans "data". On peut désactiver le stockage de la commande en vue d'un éventuel UNDO (enableHistory = false). Ceci est valable pour toutes les méthodes contenant ce paramètre.
+
 \begin{lstlisting}
-ifstream * FileStream();
+Code AddRectangle ( string name, vector<long> & data, bool enableHistory );
 \end{lstlisting}
-\textbf{Description :} retourne un pointeur vers le flux de lecture du fichier.
+\textbf{Description :} ajoute un rectangle de nom "name" et dont les caractéristiques sont contenues dans "data".
+
+\begin{lstlisting}
+Code AddPolyline ( string name, vector<long> & data, bool enableHistory );
+\end{lstlisting}
+\textbf{Description :} ajoute une polyligne de nom "name" et dont les caractéristiques sont contenues dans "data".
+
+\begin{lstlisting}
+Code AddLine ( string name, vector<long> & data, bool enableHistory );
+\end{lstlisting}
+\textbf{Description :} ajoute une ligne de nom "name" et dont les caractéristiques sont contenues dans "data".
+
+\begin{lstlisting}
+Code AddSelection ( string name, vector<long> & data, int & nbObjects );
+\end{lstlisting}
+\textbf{Description :} ajoute une sélection de nom "name" et dont les caractéristiques sont contenues dans "data". Elle renvoie dans le paramètre passé par référence "nbObjects" le nombre d'objets dans la sélection.
+
+\begin{lstlisting}
+Code Move (string name, vector<long> dXY, bool enableHistory, int & nbObjectsMoved);
+\end{lstlisting}
+\textbf{Description :} déplace l'objet ou la sélection (et donc les objets contenus) désigné par "name" du vecteur "dXY". La méthode indique dans la variable "nbObjectsMoved" passée par référence le nombre d'objets déplacés (utile dans le cas ou l'on déplace une sélection).
+
+\begin{lstlisting}
+string List ();
+\end{lstlisting}
+\textbf{Description :} renvoie une chaîne de caractère contenant la liste des commandes servant à recréer les objets de la figure.
+
+\begin{lstlisting}
+void Save (string nomFichier);
+\end{lstlisting}
+\textbf{Description :} enregistre les commandes servant à recréer les objets de la figure dans un fichier de nom "nomFichier".
+
+\begin{lstlisting}
+Code Delete (vector<string> & name, bool enableHistory, int & nbObjectsDeleted);
+\end{lstlisting}
+\textbf{Description :} supprime le(s) objet(s) et/ou le(s) sélection de la figure. La méthode indique dans la variable "nbObjectsDeleted" passée par référence le nombre d'objets déplacés.
+
+\begin{lstlisting}
+void Clear (bool enableHistory);
+\end{lstlisting}
+\textbf{Description :} supprime tous les objets et toutes les sélections de la figure.
+
+\begin{lstlisting}
+vector<string> Undo ();
+\end{lstlisting}
+\textbf{Description :} Donne les commandes nécessaires pour annuler la dernière commande.
+
+\begin{lstlisting}
+vector<string> Redo ();
+\end{lstlisting}
+\textbf{Description :} Donne les commandes nécessaires pour annuler le dernier UNDO.
+
+\begin{lstlisting}
+void AddToHistory(vector<string> histoire);
+\end{lstlisting}
+\textbf{Description :} Ajoute une entrée dans l'historique des commandes (commands).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Classe Shape
+
+\subsection{Shape}
+\subsubsection{Rôle de la classe}
+Classe abstraite mère de toutes les formes.
+
+\subsubsection{Attributs}
+Les attributs de la classe Shape :
+\begin{itemize}
+	\item \emph{name} (string), nom de la forme.
+	\item \emph{inSelection} (vector<string>), noms des formes contenant l'objet.
+\end{itemize}
+\subsubsection{Méthodes}
+Les méthodes de la classe Shape :
+
+\begin{lstlisting}
+virtual void Move (vector<long> dXY) = 0;
+\end{lstlisting}
+\textbf{Description :} déplace la forme du vecteur dXY.
+
+\begin{lstlisting}
+virtual bool InsideOf ( Point point1, Point point2 ) = 0;
+\end{lstlisting}
+\textbf{Description :} renvoie si la forme est contenue dans le rectangle caractétisé par les deux points "point1" et "point2".
+
+\begin{lstlisting}
+virtual string Command() = 0;
+\end{lstlisting}
+\textbf{Description :} renvoie la commande servant à recréer cet objet.
+
+\begin{lstlisting}
+virtual string GetName();
+\end{lstlisting}
+\textbf{Description :} renvoie le nom de l'objet.
+
+\begin{lstlisting}
+vector<string> & GetSelections();
+\end{lstlisting}
+\textbf{Description :} renvoie les noms des sélections contenant l'objet.
+
+\begin{lstlisting}
+void AddSelection(string selection);
+\end{lstlisting}
+\textbf{Description :} ajoute le nom de la sélection dans le vecteur des sélections contenant l'objet.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Classe Circle
+
+\subsection{Circle}
+\subsubsection{Rôle de la classe}
+Représente un cercle.
+
+\subsubsection{Attributs}
+Les attributs de la classe Circle (hors ceux hérités de Shape) :
+\begin{itemize}
+	\item \emph{radius} (long), rayon du cercle.
+	\item \emph{center} (Point), centre du cercle.
+\end{itemize}
+
+\subsubsection{Méthodes}
+La classe Circle implémente les méthodes (héritées de Shape) :
+
+\begin{lstlisting}
+virtual void Move (vector<long> dXY) = 0;
+\end{lstlisting}
+\begin{lstlisting}
+virtual bool InsideOf ( Point point1, Point point2 ) = 0;
+\end{lstlisting}
+\begin{lstlisting}
+virtual string Command() = 0;
+\end{lstlisting}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Classe Polyligne
+
+\subsection{Polyline}
+\subsubsection{Rôle de la classe}
+Représente une polyligne.
+
+\subsubsection{Attributs}
+Les attributs de la classe Polyline (hors ceux hérités de Shape) :
+\begin{itemize}
+	\item \emph{points} (vector<Point>), points de la polyligne.
+\end{itemize}
+
+\subsubsection{Méthodes}
+La classe Polyline implémente les méthodes (héritées de Shape) :
+
+\begin{lstlisting}
+virtual void Move (vector<long> dXY) = 0;
+\end{lstlisting}
+\begin{lstlisting}
+virtual bool InsideOf ( Point point1, Point point2 ) = 0;
+\end{lstlisting}
+\begin{lstlisting}
+virtual string Command() = 0;
+\end{lstlisting}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Classe Line
+
+\subsection{Line}
+\subsubsection{Rôle de la classe}
+Représente une ligne.
+
+\subsubsection{Méthodes}
+La classe Line implémente la méthode (héritée de Shape) :
+
+\begin{lstlisting}
+string Command();
+\end{lstlisting}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Classe Line
+
+\subsection{Rectangle}
+\subsubsection{Rôle de la classe}
+Représente un rectangle.
+
+\subsubsection{Méthodes}
+La classe Rectangle implémente la méthode (héritée de Shape) :
+
+\begin{lstlisting}
+string Command();
+\end{lstlisting}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Classe Selection
+
+\subsection{Selection}
+\subsubsection{Rôle de la classe}
+Représente une sélection, capable de répertorier des objets et d'effectuer des actions dessus (déplacement et suppression).
+
+\subsubsection{Attributs}
+Les attributs de la classe Selection :
+\begin{itemize}
+	\item \emph{shapes} (set <Shape*>), pointeurs vers les objets contenus dans la sélection.
+\end{itemize}
+
+\subsubsection{Méthodes}
+Les méthodes de la classe Selection :
+
+\begin{lstlisting}
+void AddShape ( Shape * forme );
+\end{lstlisting}
+\textbf{Description :} ajoute un objets à la sélection.
+
+\begin{lstlisting}
+void RemoveShape (Shape * forme);
+\end{lstlisting}
+\textbf{Description :} supprime une forme de la sélection.
+
+\begin{lstlisting}
+void Move( vector<long> dXY, vector<string> & lineCommand);
+\end{lstlisting}
+\textbf{Description :} déplace tous les objets contenu dans la sélection du vecteur "dXY" et renvoie les commandes "lineCommand" à stocker dans l'historique.
+
+\begin{lstlisting}
+set<Shape*> & GetShapesInside();
+\end{lstlisting}
+\textbf{Description :} renvoie l'ensemble de tous les objets contenus dans la sélection.
+
+\begin{lstlisting}
+int GetNbShapesInside();
+\end{lstlisting}
+\textbf{Description :}  renvoie le nombre d'objets contenus dans la sélection.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Classe Point
+
+\subsection{Point}
+\subsubsection{Rôle de la classe}
+Représente un point.
+
+\subsubsection{Attributs}
+Les attributs de la classe Point :
+\begin{itemize}
+	\item \emph{x} (long), abscisse.
+	\item \emph{y} (long), ordonnée.
+\end{itemize}
+
+\subsubsection{Méthodes}
+Les méthodes de la classe Point :
+
+\begin{lstlisting}
+void Move ( long dX, long dY );
+\end{lstlisting}
+\textbf{Description :} déplace le point.
+
+\begin{lstlisting}
+long GetX ();
+\end{lstlisting}
+\textbf{Description :} renvoie x.
+
+\begin{lstlisting}
+long GetY ();
+\end{lstlisting}
+\textbf{Description :}  renvoie y.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% END
-
-\section{Description et justification des structures de données}
-\subsection{N\oe{}uds \& Arcs}
-Les n\oe{}uds et les arcs sont stockés séparément  dans deux arbres rouge noir dont les clés sont le label du n\oe{}ud ou la représentation sérialisée d'un arc. Cela permet de stocker chaque n\oe{}ud de manière unique et la recherche et l'insertion sont rapides (complexité $O(log(n))$).
-Cela permet aussi de générer de manière efficace le fichier \emph{GraphViz} ainsi que les statistiques (complexité $O(n)$).
-
-\begin{center}
-\begin{figure}[!ht]
-\centering
-%\includegraphics[scale=0.8]{graphics/memoryimp.png}
-\caption{Implentation en mémoire des données du graphe}
-\end{figure}
-\end{center}
-
-\FloatBarrier
 
 \section{Diagramme de classes}
 
 \begin{center}
 \begin{figure}[!ht]
 \centering
-%\includegraphics[scale=0.8]{graphics/dgclasses.png}
+\includegraphics[scale=0.6]{uml.jpg}
 \caption{Diagramme UML classes}
 \end{figure}
 \end{center}
 
 \FloatBarrier
+\clearpage
 
 \section{Description des tests}
 
 \begin{center}
 \begin{tabular}{|l|l|l|}
 \hline
-\thead{Identifiant du test} & \thead{Nom du test} & \thead{Description synthétique du test} \\
+\thead{Identifiant du test} &  \thead{Description synthétique du test} \\
 \hline
-\makecell{1} & \makecell{Test des statistiques} & \makecell[l]{Vérification du bon fonctionnement du programme en terme \\ d'élaboration de statistiques} \\
+\makecell{1} & \makecell[l]{Vérifie que la commande de création de cercle fonctionne et que l'insertion d'une forme au nom déjà \\utilisé échoue.} \\
+\hline\makecell{2} & \makecell[l]{Vérifie que la commande de création de rectangle fonctionne.} \\
+\hline\makecell{3} & \makecell[l]{Vérifie que la commande de création de ligne fonctionne.} \\
+\hline\makecell{4} & \makecell[l]{Vérifie que la création de plusieurs polylignes de tailles différentes fonctionne.} \\
+\hline\hline\makecell{5} & \makecell[l]{Vérifie qu'une sélection n'incluant aucun objet aboutit à une erreur.} \\
+\hline\makecell{6} & \makecell[l]{Vérifie qu'une sélection portant un nom déjà utilisé n'aboutit pas.} \\
+\hline\makecell{7} & \makecell[l]{Vérifie qu'une sélection incluant théoriquement plusieurs objets fonctionne et prend en compte les bons\\ objets.} \\
+\hline\hline\makecell{8} & \makecell[l]{Vérifie que la suppression d'un objet inexistant declenche une erreur.} \\
+\hline\hline\makecell{9} & \makecell[l]{Vérifie que la suppression de plusieurs formes fonctionne.} \\
+\hline\hline\makecell{10} & \makecell[l]{Vérifie que la supression d'une sélection fonctionne.} \\
+\hline\makecell{11} & \makecell[l]{Vérifie que la supression d'un objet permet d'en récréer immédiatement un du même nom.} \\
+\hline\hline\makecell{12} & \makecell[l]{Vérifie que la la commande CLEAR efface bien tous les objets.} \\
+\hline\makecell{13} & \makecell[l]{Vérifie que la la commande CLEAR efface bien tous les objets même dans une sélection.} \\
+\hline\hline\makecell{14} & \makecell[l]{Vérifie que le déplacement d'un objet inexistant declenche une erreur.} \\
+\hline\makecell{15} & \makecell[l]{Vérifie que le déplacement d'une forme fonctionne. (Vérifié via une énumération).} \\
+\hline\makecell{16} & \makecell[l]{Vérifie que le déplacement d'une sélection fonctionne. (Vérifié via une énumération).} \\
+\hline\hline\makecell{17} & \makecell[l]{Vérifie que lancer une énumeration alors qu'aucun n'objet n'a été créé aboutit à une erreur.} \\
+\hline\makecell{18} & \makecell[l]{Vérifie que les résultat d'une énumération est correct et dans l'ordre alphabétique.} \\
+\hline\makecell{19} & \makecell[l]{Vérifie que la commande UNDO peut annuler l'insertion d'un objet.} \\
+\hline\makecell{20} & \makecell[l]{Vérifie que la commande UNDO peut annuler la suppression d'un objet.} \\
+\hline\makecell{21} & \makecell[l]{Vérifie que la commande UNDO peut annuler la commande CLEAR.} \\
+\hline\makecell{22} & \makecell[l]{Vérifie que la commande UNDO peut annuler la suppression d'une selection d'objets.} \\
+\hline\makecell{23} & \makecell[l]{Vérifie que la commande UNDO peut annuler le déplacement d'un objet.} \\
+\hline\makecell{24} & \makecell[l]{Vérifie que la commande UNDO peut annuler le déplacement d'une selection d'objets.} \\
+\hline\hline\makecell{25} & \makecell[l]{Vérifie que la commande REDO peut refaire l'insertion d'un objet.} \\
+\hline\makecell{26} & \makecell[l]{Vérifie que la commande REDO peut refaire la commande CLEAR.} \\
+\hline\makecell{27} & \makecell[l]{Vérifie que la commande REDO peut refaire la suppression d'un objet.} \\
+\hline\makecell{28} & \makecell[l]{Vérifie que la commande REDO peut refaire la suppression d'une selection d'objets.} \\
+\hline\makecell{29} & \makecell[l]{Vérifie que la commande REDO peut refaire la suppression d'un objet.} \\
+\hline\makecell{30} & \makecell[l]{Vérifie que la commande REDO peut refaire le déplacement d'une selection d'objets.} \\
+\hline\makecell{31} & \makecell[l]{Vérifie que la commande REDO ne fonctionne qu'à la suite d'un UNDO.} \\
+\hline\hline\makecell{32} & \makecell[l]{Vérifie que la commande SAVE sauvegarde bien les objets dans un fichier.} \\
+\hline\makecell{33} & \makecell[l]{Vérifie que la commande LOAD crée bien les objects sauvegardés dans le fichier.} \\
 \hline
-\makecell{2} & \makecell{Test du générateur Dot} & \makecell[l]{Vérification du  bon fonctionnement du programme en terme \\ de génération du fichier GraphViz (*.dot)} \\
-\hline
-\makecell{3} & \makecell{Test du filtre sur fichiers} & \makecell[l]{Vérification du bon fonctionnement du programme en terme \\ de filtrage des entrées de logs sur le type de fichier cible \\ (*.png, *.css, *.js)} \\
-\hline
-\makecell{4} & Test du filtre sur horaires &  \makecell[l]{Vérification du bon fonctionnement du programme en terme \\ de filtrage des entrées de logs sur l'horaire} \\
-\hline
-\makecell{5} & Test traitement log vide &  \makecell[l]{Vérification du bon fonctionnement du programme en terme \\ de traitement d'un fichier de log vide} \\
-\hline
-\makecell{6} & Test traitement entrée de log &  \makecell[l]{Vérification du bon fonctionnement du programme en terme \\ de traitement d'une entrée de log réduite au strict minimum \\ i.e. les paramètres non utilisés sont réduits à '-'} \\
-\hline
-\makecell{7} & Test traitement entrée de log &  \makecell[l]{Vérification du bon fonctionnement du programme en terme \\ de traitement d'une entrée de log réduite au strict minimum \\ i.e. les paramètres non utilisés sont réduits à '-'} \\
-\hline
+
 \end{tabular}
 \end{center}
 

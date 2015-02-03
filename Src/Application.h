@@ -65,7 +65,7 @@ private:
 //------------------------------------------------------- Méthodes privées
     Code interpret(string cmdLine, bool enableHistory, bool verbose);
 
-    //infraction au guide de style, struct necessaire pour la fonction
+    //struct definie plus bas
     struct CmdArgs;
     bool parseLine(CmdArgs & cmdArgs, stringstream & line, int nbArgs);
 

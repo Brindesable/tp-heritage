@@ -1,6 +1,6 @@
 #include "Application.h"
 
-#define TEST
+//#define TEST
 #ifndef TEST
 
 int main()

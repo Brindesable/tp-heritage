@@ -39,7 +39,7 @@ vector<string>  & Shape::GetSelections()
     return inSelection;
 }
 
-void Shape::addSelection(string selection)
+void Shape::AddSelection(string selection)
 // Algorithme :
 //
 {   inSelection.push_back(selection);

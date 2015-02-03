@@ -5,6 +5,7 @@ enum Code
 {
     OK = 1,
     NAME_ALREADY_USED,
+    COMMENT,
     INEXISTING_OBJECT,
     ERROR_SYNTAX,
     ERROR_LOADING,

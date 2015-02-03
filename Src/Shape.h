@@ -61,7 +61,7 @@ public:
     // Contrat :
     //
 
-    void addSelection(string selection);
+    void AddSelection(string selection);
     // Mode d'emploi :
     //
     // Contrat :
