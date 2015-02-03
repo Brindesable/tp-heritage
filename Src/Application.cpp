@@ -139,7 +139,12 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 				code = figure.AddCircle(cmd.objects.at(0), cmd.numbers, enableHistory);
 
 				if(verbose && code == OK)
-                {   cout << "OK\r\n#1 object(s) created\r\n";
+                {
+#ifdef NO_COMMENTS
+                    cout << "OK\r\n";
+#else
+                    cout << "OK\r\n#1 object(s) created\r\n";
+#endif
                 }
             }
             else
@@ -160,7 +165,12 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 				//insertion du rectangle
 				code = figure.AddRectangle(cmd.objects.at(0), cmd.numbers, enableHistory);
 				if(verbose && code == OK)
-                {   cout << "OK\r\n#1 object(s) created\r\n";
+                {
+#ifdef NO_COMMENTS
+                    cout << "OK\r\n";
+#else
+                    cout << "OK\r\n#1 object(s) created\r\n";
+#endif
                 }
             }
             else
@@ -181,7 +191,12 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
             {   //insertion de la ligne
                 code = figure.AddLine(cmd.objects.at(0), cmd.numbers, enableHistory);
 				if(verbose && code == OK)
-                {   cout << "OK\r\n#1 object(s) created\r\n";
+                {
+#ifdef NO_COMMENTS
+                    cout << "OK\r\n";
+#else
+                    cout << "OK\r\n#1 object(s) created\r\n";
+#endif
                 }
             }
             else
@@ -202,7 +217,12 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 			{   //insertion de la polyligne
 				code = figure.AddPolyline(cmd.objects.at(0), cmd.numbers, enableHistory);
 				if(verbose && code == OK)
-                {   cout << "OK\r\n#1 object(s) created\r\n";
+                {
+#ifdef NO_COMMENTS
+                    cout << "OK\r\n";
+#else
+                    cout << "OK\r\n#1 object(s) created\r\n";
+#endif
                 }
             }
             else
@@ -223,10 +243,20 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
             code = figure.AddSelection(cmd.objects.at(0), cmd.numbers, nbObjects);
             if(code == OK)
             {   if(nbObjects > 0)
-                {   cout << "OK\r\n#" << nbObjects << " object(s) selected\r\n";
+                {
+#ifdef NO_COMMENTS
+                    cout << "OK\r\n";
+#else
+                    cout << "OK\r\n#" << nbObjects << " object(s) selected\r\n";
+#endif
                 }
                 else
-                {   cout << "ERR\r\n#0 object(s) selected\r\n";
+                {
+#ifdef NO_COMMENTS
+                    cout << "ERR\r\n";
+#else
+                    cout << "ERR\r\n#0 object(s) selected\r\n";
+#endif
                 }
             }
         }
@@ -244,10 +274,20 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 
             if(verbose && code == OK)
             {   if(nbObjects > 0)
-                {   cout << "OK\r\n#" << nbObjects << " object(s) deleted\r\n";
+                {
+#ifdef NO_COMMENTS
+                    cout << "OK\r\n";
+#else
+                    cout << "OK\r\n#" << nbObjects << " object(s) deleted\r\n";
+#endif
                 }
                 else
-                {   cout << "ERR\r\n#0 object(s) deleted\r\n";
+                {
+#ifdef NO_COMMENTS
+                    cout << "ERR\r\n";
+#else
+                    cout << "ERR\r\n#0 object(s) deleted\r\n";
+#endif
                 }
             }
         }
@@ -273,10 +313,20 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 			code = figure.Move(cmd.objects.at(0), cmd.numbers, enableHistory, nbObjects);
             if(verbose && code == OK)
             {   if(nbObjects > 0)
-                {   cout << "OK\r\n#" << nbObjects << " object(s) moved\r\n";
+                {
+#ifdef NO_COMMENTS
+                    cout << "OK\r\n";
+#else
+                    cout << "OK\r\n#" << nbObjects << " object(s) moved\r\n";
+#endif
                 }
                 else
-                {   cout << "ERR\r\n#0 object(s) moved\r\n";
+                {
+#ifdef NO_COMMENTS
+                    cout << "ERR\r\n";
+#else
+                    cout << "ERR\r\n#0 object(s) moved\r\n";
+#endif
                 }
             }
         }
@@ -306,7 +356,12 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 					interpret(*it, false, false);
 				}
 				urMove=false;
-		        cout << "OK\r\n#" << undo.size() - 1 << " object(s) moved\r\n";
+
+#ifdef NO_COMMENTS
+                    cout << "OK\r\n";
+#else
+                    cout << "OK\r\n#" << undo.size() - 1 << " object(s) moved\r\n";
+#endif
 			}
 			//si on doit undo un DELETE, on recree les objets supprimes
 			if(undo.front()=="DELETE"){
@@ -314,7 +369,11 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 				{
 					interpret(*it, false, false);
 				}
-				cout << "OK\r\n#" << undo.size() - 1 << " object(s) created\r\n";
+#ifdef NO_COMMENTS
+                cout << "OK\r\n";
+#else
+                cout << "OK\r\n#" << undo.size() - 1 << " object(s) created\r\n";
+#endif
 			}
 			//si on doit undo un INSERT, on supprime les objets ajoute
 			if(undo.front()=="INSERT"){
@@ -324,7 +383,11 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 					interpret(*it, false, false);
 				}
 				urDelete=false;
-				cout << "OK\r\n#" << undo.size() - 1 << " object(s) deleted\r\n";
+#ifdef NO_COMMENTS
+                cout << "OK\r\n";
+#else
+                cout << "OK\r\n#" << undo.size() - 1 << " object(s) deleted\r\n";
+#endif
 			}
 		}
 		else
@@ -344,7 +407,11 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 				{
 					interpret(*it, false, false);
 				}
-				cout << "OK\r\n#" << redo.size() - 1 << " object(s) created\r\n";
+#ifdef NO_COMMENTS
+                cout << "OK\r\n";
+#else
+                cout << "OK\r\n#" << redo.size() - 1 << " object(s) created\r\n";
+#endif
 			}
 			// si c'est un move, on bouge normalement les formes
 			if(redo.front()=="MOVE"){
@@ -352,7 +419,11 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 				{
 					interpret(*it, false, false);
 				}
-				cout << "OK\r\n#" << redo.size() - 1 << " object(s) moved\r\n";
+#ifdef NO_COMMENTS
+                cout << "OK\r\n";
+#else
+                cout << "OK\r\n#" << redo.size() - 1 << " object(s) moved\r\n";
+#endif
 			}
 			// si c'est un delete, on resupprime les formes
 			if(redo.front()=="DELETE"){
@@ -362,11 +433,20 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 					interpret(*it, false, false);
 				}
 				urDelete=false;
-				cout << "OK\r\n#" << redo.size() - 1 << " object(s) deleted\r\n";
+#ifdef NO_COMMENTS
+                    cout << "OK\r\n";
+#else
+                	cout << "OK\r\n#" << redo.size() - 1 << " object(s) deleted\r\n";
+#endif
 			}
 		}
 		else
-		{	cout << "ERR\r\n#no undo before\r\n";
+		{
+#ifdef NO_COMMENTS
+                    cout << "ERR\r\n";
+#else
+                	cout << "ERR\r\n#no undo before\r\n";
+#endif
 		}
     }
     //================================================================================= Command LOAD
@@ -398,7 +478,11 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 				if(codeLoad == OK)
                 {   figure.AddToHistory(history);
                     code = OK;
-                    cout << "OK\r\n#" << history.size() - 1 << " object(s) created\r\n";
+#ifdef NO_COMMENTS
+                    cout << "OK\r\n";
+#else
+                	cout << "OK\r\n#" << history.size() - 1 << " object(s) created\r\n";
+#endif
                 }
                 //sinon on n'enregistre pas l'historique et on defait tout les commandes
                 else if(code != COMMENT)
@@ -412,7 +496,12 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 				fichier.close(); //Quand on a tout finit on ferme le fichier
 			}
 			else
-			{   cout << "ERR\r\n#unable to open file" << endl;
+			{
+#ifdef NO_COMMENTS
+                cout << "ERR\r\n";
+#else
+                cout << "ERR\r\n#unable to open file" << endl;
+#endif
 			}
 		}
         else
@@ -434,7 +523,11 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
     //================================================================================= Command CLEAR
     else if(cmdGiven == cmdClear.toString)
     {   figure.Clear(enableHistory);
-		cout << "OK\r\n#everything cleared\r\n";
+#ifdef NO_COMMENTS
+        cout << "OK\r\n";
+#else
+        cout << "OK\r\n#everything cleared\r\n";
+#endif
     }
     //================================================================================= Command EXIT
     else if(cmdGiven == cmdExit.toString)
@@ -454,16 +547,32 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
             case COMMENT :
                 break;
             case NAME_ALREADY_USED :
+#ifdef NO_COMMENTS
+                cout << "ERR\r\n";
+#else
                 cout << "ERR\r\n#name already used\r\n";
+#endif
                 break;
             case INEXISTING_OBJECT :
+#ifdef NO_COMMENTS
+                cout << "ERR\r\n";
+#else
                 cout << "ERR\r\n#unknown object\r\n";
+#endif
                 break;
             case ERROR_SYNTAX :
+#ifdef NO_COMMENTS
+                cout << "ERR\r\n";
+#else
                 cout << "ERR\r\n#error syntax\r\n";
+#endif
                 break;
             case ERROR_LOADING :
+#ifdef NO_COMMENTS
+                cout << "ERR\r\n";
+#else
                 cout << "ERR\r\n#loading error\r\n";
+#endif
                 break;
         }
     }

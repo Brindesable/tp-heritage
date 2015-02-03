@@ -244,7 +244,12 @@ string Figure::List ()
 	}
 	//s'il n'y a aucune forme
 	else
-	{	ss << "#anything created yet\r\n";
+	{
+#ifdef NO_COMMENTS
+	    ss << "";
+#else
+	    ss << "#anything created yet\r\n";
+#endif
 	}
 
 	return ss.str();
