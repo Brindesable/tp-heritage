@@ -130,7 +130,7 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
     {   code = COMMENT;
     }
     //================================================================================= Command C
-    if(cmdGiven == cmdCircle.toString)
+    else if(cmdGiven == cmdCircle.toString)
     {   //la ligne est bien formee
         if(parseLine(cmd, cmdStringStream, cmdCircle.nbArgs))
         {   //ce n'est pas une commande "reverse"
@@ -338,6 +338,7 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
     else if(cmdGiven == cmdEnum.toString)
     {   //liste de tous les objets
         cout << figure.List();
+		code = OK;
     }
     //================================================================================= Command UNDO
     else if(cmdGiven == cmdUndo.toString)
@@ -391,7 +392,12 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 			}
 		}
 		else
-		{	cout << "ERR\r\n#no command to undo\r\n";
+		{	
+#ifdef NO_COMMENTS
+                cout << "OK\r\n";
+#else
+                cout << "ERR\r\n#no command to undo\r\n";
+#endif
 		}
     }
     //================================================================================= Command REDO
@@ -464,7 +470,7 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 				// déclaration d'une chaîne qui contiEndRa la ligne lue
 				string contenu;
 				//code de l'insertion
-				Code codeLoad = OK;
+				Code codeLoad = COMMENT;
 				//pour chaque ligne du fichier
 				while(getline(fichier, contenu) && (codeLoad == OK || codeLoad == COMMENT))
 				{   //on interprete la ligne du fichier
@@ -474,8 +480,8 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
                     {   history.push_back(contenu);
                     }
 				}
-				//si toutes les insertions du fichier on fonctionnés sans erreur
-				if(codeLoad == OK)
+				//si toutes les insertions du fichier on fonctionnés sans erreur et qu'iil y a au moins une insertion
+				if((codeLoad == OK || codeLoad == COMMENT) && history.size() > 1)
                 {   figure.AddToHistory(history);
                     code = OK;
 #ifdef NO_COMMENTS
@@ -485,7 +491,7 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 #endif
                 }
                 //sinon on n'enregistre pas l'historique et on defait tout les commandes
-                else if(code != COMMENT)
+                else if(!(codeLoad == OK || codeLoad == COMMENT))
                 {   urDelete=true;
                     for(int i = 1; i < history.size(); i++)
                     {   interpret(history[i], false, false);
@@ -493,6 +499,9 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
                     urDelete=false;
                     code = ERROR_LOADING;
                 }
+				else
+				{	code = ERROR_LOADING;
+				}
 				fichier.close(); //Quand on a tout finit on ferme le fichier
 			}
 			else
