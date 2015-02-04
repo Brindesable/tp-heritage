@@ -394,7 +394,7 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
 		else
 		{	
 #ifdef NO_COMMENTS
-                cout << "OK\r\n";
+                cout << "ERR\r\n";
 #else
                 cout << "ERR\r\n#no command to undo\r\n";
 #endif
@@ -480,7 +480,7 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
                     {   history.push_back(contenu);
                     }
 				}
-				//si toutes les insertions du fichier on fonctionnés sans erreur et qu'iil y a au moins une insertion
+				//si toutes les insertions du fichier on fonctionnés sans erreur et qu'il y a au moins une insertion
 				if((codeLoad == OK || codeLoad == COMMENT) && history.size() > 1)
                 {   figure.AddToHistory(history);
                     code = OK;
@@ -555,6 +555,8 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
                 break;
             case COMMENT :
                 break;
+			case EXIT :
+				break;
             case NAME_ALREADY_USED :
 #ifdef NO_COMMENTS
                 cout << "ERR\r\n";

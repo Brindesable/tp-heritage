@@ -3,3 +3,4 @@ MOVE circle1 10 10
 UNDO
 REDO
 LIST
+EXIT

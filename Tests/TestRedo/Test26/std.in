@@ -3,3 +3,4 @@ DELETE circle1
 UNDO
 REDO
 LIST
+EXIT

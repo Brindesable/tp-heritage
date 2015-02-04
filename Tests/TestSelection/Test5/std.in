@@ -2,3 +2,4 @@ C circle1 0 0 10
 C circle2 0 0 5
 C circle3 0 0 3
 S selection 20 20 30 30
+EXIT
