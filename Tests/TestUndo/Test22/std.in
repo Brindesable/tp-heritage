@@ -4,3 +4,4 @@ S selection -20 -20 20 20
 DELETE selection
 UNDO
 LIST
+EXIT

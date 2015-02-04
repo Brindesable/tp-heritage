@@ -2,3 +2,4 @@ PL polyline1 0 0 10 10
 PL polyline2 0 0 10 10 0 20
 PL polyline3 0 0 10 10 0 20 10 30
 PL polyline4 0 0 10 10 0 20 10 30 0 40
+EXIT

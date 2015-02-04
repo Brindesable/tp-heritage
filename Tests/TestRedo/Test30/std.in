@@ -5,3 +5,4 @@ MOVE selection 10 10
 UNDO
 REDO
 LIST
+EXIT

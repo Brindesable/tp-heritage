@@ -555,6 +555,8 @@ Code Application::interpret(string cmdString, bool enableHistory, bool verbose)
                 break;
             case COMMENT :
                 break;
+			case EXIT :
+				break;
             case NAME_ALREADY_USED :
 #ifdef NO_COMMENTS
                 cout << "ERR\r\n";

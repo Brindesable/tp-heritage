@@ -4,3 +4,4 @@ S selection -20 -20 20 20
 MOVE selection 10 10
 UNDO
 LIST
+EXIT
